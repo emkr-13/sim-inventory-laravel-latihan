@@ -37,6 +37,18 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    :href="route('products.index')"
+                                    :active="route().current('products.index')"
+                                >
+                                    Produk
+                                </NavLink>
+                                <NavLink
+                                    :href="route('suppliers.index')"
+                                    :active="route().current('suppliers.index')"
+                                >
+                                    Supplier
+                                </NavLink>
                             </div>
                         </div>
 
@@ -137,13 +149,33 @@ const showingNavigationDropdown = ref(false);
                     }"
                     class="sm:hidden"
                 >
-                    <div class="space-y-1 pb-3 pt-2">
-                        <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
-                        >
-                            Dashboard
-                        </ResponsiveNavLink>
+                    <div
+                        :class="{
+                            block: showingNavigationDropdown,
+                            hidden: !showingNavigationDropdown,
+                        }"
+                        class="sm:hidden"
+                    >
+                        <div class="space-y-1 pb-3 pt-2">
+                            <ResponsiveNavLink
+                                :href="route('dashboard')"
+                                :active="route().current('dashboard')"
+                            >
+                                Dashboard
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('products.index')"
+                                :active="route().current('products.index')"
+                            >
+                                Produk
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink
+                                :href="route('suppliers.index')"
+                                :active="route().current('suppliers.index')"
+                            >
+                                Supplier
+                            </ResponsiveNavLink>
+                        </div>
                     </div>
 
                     <!-- Responsive Settings Options -->
