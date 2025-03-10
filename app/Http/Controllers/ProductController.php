@@ -11,7 +11,11 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('supplier')->get();
-        return Inertia::render('Products/Index', compact('products'));
+        $suppliers = Supplier::all(); 
+        return Inertia::render('Products/Index', [
+            'products' => $products,
+            'suppliers' => $suppliers,
+        ]);
     }
 
     public function create()
