@@ -28,7 +28,6 @@ const submit = () => {
     });
 };
 </script>
-
 <template>
     <GuestLayout>
         <Head title="Log in" />
@@ -72,9 +71,7 @@ const submit = () => {
             <div class="mt-4 block">
                 <label class="flex items-center">
                     <Checkbox name="remember" v-model:checked="form.remember" />
-                    <span class="ms-2 text-sm text-gray-600"
-                        >Remember me</span
-                    >
+                    <span class="ms-2 text-sm text-gray-600">Remember me</span>
                 </label>
             </div>
 
@@ -96,5 +93,13 @@ const submit = () => {
                 </PrimaryButton>
             </div>
         </form>
+
+        <!-- Link ke Halaman Register -->
+        <div class="mt-4 text-center">
+            <span class="text-sm text-gray-600">Belum punya akun?</span>
+            <Link :href="route('register')" class="ml-1 text-sm text-blue-500 hover:underline">
+                Daftar Sekarang
+            </Link>
+        </div>
     </GuestLayout>
 </template>
