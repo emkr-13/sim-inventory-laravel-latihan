@@ -10,15 +10,22 @@
             <!-- Tombol Aksi -->
             <div class="mb-4 space-x-2">
                 <button
-                    @click="openModal"
+                    @click="openAddModal"
                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
                     Tambah Supplier
                 </button>
             </div>
 
-            <!-- Modal -->
-            <SupplierModal :isModalOpen="isModalOpen" @close="isModalOpen = false" />
+            <!-- Modal Tambah Supplier -->
+            <SupplierModal :isModalOpen="isAddModalOpen" @close="isAddModalOpen = false" />
+
+            <!-- Modal Edit Supplier -->
+            <SupplierEditModal
+                :isModalOpen="isEditModalOpen"
+                :supplier="selectedSupplier"
+                @close="closeEditModal"
+            />
 
             <!-- Tabel Supplier -->
             <table class="min-w-full border-collapse block md:table">
@@ -61,12 +68,12 @@
                         </td>
                         <td class="p-2 md:border md:border-gray-500 text-left block md:table-cell">
                             <span class="inline-block w-1/3 md:hidden font-bold">Aksi</span>
-                            <Link
-                                :href="route('suppliers.edit', supplier.id)"
+                            <button
+                                @click="openEditModal(supplier)"
                                 class="text-blue-500 hover:underline mr-2"
                             >
                                 Edit
-                            </Link>
+                            </button>
                             <button
                                 @click="deleteSupplier(supplier.id)"
                                 class="text-red-500 hover:underline"
@@ -85,16 +92,29 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import SupplierModal from "@/Components/SupplierModal.vue";
+import SupplierEditModal from "@/Components/SupplierEditModal.vue";
 import { ref } from "vue";
 
 defineProps({
     suppliers: Array,
 });
 
-const isModalOpen = ref(false);
+const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+const selectedSupplier = ref(null);
 
-const openModal = () => {
-    isModalOpen.value = true;
+const openAddModal = () => {
+    isAddModalOpen.value = true;
+};
+
+const openEditModal = (supplier) => {
+    selectedSupplier.value = supplier; // Set supplier yang dipilih
+    isEditModalOpen.value = true;
+};
+
+const closeEditModal = () => {
+    selectedSupplier.value = null; // Reset supplier yang dipilih
+    isEditModalOpen.value = false;
 };
 
 const deleteSupplier = (id) => {

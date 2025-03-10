@@ -31,21 +31,32 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil ditambahkan.');
     }
 
-    public function edit(Supplier $supplier)
+    public function edit($id)
     {
-        return Inertia::render('Suppliers/Edit', compact('supplier'));
+        $supplier = Supplier::findOrFail($id); // Ambil data supplier berdasarkan ID
+        return Inertia::render('Suppliers/Edit', [
+            'supplier' => $supplier, // Kirim data supplier ke frontend
+        ]);
     }
 
-    public function update(Request $request, Supplier $supplier)
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $supplier = Supplier::findOrFail($id);
+
+        // Validasi input
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:suppliers,email,' . $supplier->id,
-            'phone' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:20',
             'address' => 'required|string',
         ]);
 
-        $supplier->update($request->all());
+        // Update data supplier
+        $supplier->update($validatedData);
+
         return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil diperbarui.');
     }
 

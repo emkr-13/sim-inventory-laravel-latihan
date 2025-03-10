@@ -11,7 +11,7 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('supplier')->get();
-        $suppliers = Supplier::all(); 
+        $suppliers = Supplier::all();
         return Inertia::render('Products/Index', [
             'products' => $products,
             'suppliers' => $suppliers,
@@ -40,13 +40,19 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        $$products = Product::findOrFail($product);
         $suppliers = Supplier::all();
-        return Inertia::render('Products/Edit', compact('product', 'suppliers'));
+
+        return Inertia::render('Products/Edit', [
+            'products' => $products,
+            'supplier' => $supplier, // Kirim data supplier ke frontend
+        ]);
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $id)
     {
-        $request->validate([
+        $product = Product::findOrFail($id);
+        $validatedData =$request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'stock' => 'required|integer|min:0',
@@ -54,7 +60,7 @@ class ProductController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
         ]);
 
-        $product->update($request->all());
+        $product->update($validatedData );
         return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
     }
 

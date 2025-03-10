@@ -3,28 +3,32 @@
         <Head title="Daftar Produk" />
 
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">Daftar Produk</h2>
+            <h2 class="text-xl font-semibold leading-tight text-gray-800">
+                Daftar Produk
+            </h2>
         </template>
 
         <div class="p-6 bg-white rounded shadow">
             <!-- Tombol Aksi -->
             <div class="mb-4 space-x-2">
                 <button
-                    @click="openModal"
+                    @click="openAddModal"
                     class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                 >
                     Tambah Produk
                 </button>
-                <Link
-                    :href="route('products.trashed')"
-                    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                >
-                    Lihat Sampah
-                </Link>
             </div>
 
-            <!-- Modal -->
-            <ProductModal :isModalOpen="isModalOpen" :suppliers="suppliers" @close="isModalOpen = false" />
+            <!-- Modal Tambah Produk -->
+            <ProductModal :isModalOpen="isAddModalOpen" :suppliers="suppliers" @close="isAddModalOpen = false" />
+
+            <!-- Modal Edit Produk -->
+            <ProductEditModal
+                :isModalOpen="isEditModalOpen"
+                :product="selectedProduct"
+                :suppliers="suppliers"
+                @close="closeEditModal"
+            />
 
             <!-- Tabel Produk -->
             <table class="min-w-full border-collapse block md:table">
@@ -67,12 +71,12 @@
                         </td>
                         <td class="p-2 md:border md:border-gray-500 text-left block md:table-cell">
                             <span class="inline-block w-1/3 md:hidden font-bold">Aksi</span>
-                            <Link
-                                :href="route('products.edit', product.id)"
+                            <button
+                                @click="openEditModal(product)"
                                 class="text-blue-500 hover:underline mr-2"
                             >
                                 Edit
-                            </Link>
+                            </button>
                             <button
                                 @click="deleteProduct(product.id)"
                                 class="text-red-500 hover:underline"
@@ -91,6 +95,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Head, Link } from "@inertiajs/vue3";
 import ProductModal from "@/Components/ProductModal.vue";
+import ProductEditModal from "@/Components/ProductEditModal.vue";
 import { ref } from "vue";
 
 defineProps({
@@ -98,10 +103,22 @@ defineProps({
     suppliers: Array,
 });
 
-const isModalOpen = ref(false);
+const isAddModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+const selectedProduct = ref(null);
 
-const openModal = () => {
-    isModalOpen.value = true;
+const openAddModal = () => {
+    isAddModalOpen.value = true;
+};
+
+const openEditModal = (product) => {
+    selectedProduct.value = product; // Set produk yang dipilih
+    isEditModalOpen.value = true;
+};
+
+const closeEditModal = () => {
+    selectedProduct.value = null; // Reset produk yang dipilih
+    isEditModalOpen.value = false;
 };
 
 const deleteProduct = (id) => {
